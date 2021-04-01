@@ -48,7 +48,7 @@ public class BrowseNodeExample implements ClientExample {
 
             for (UaNode node : nodes) {
                 logger.info("{} Node={}", indent, node.getBrowseName().getName());
-
+                
                 // recursively browse to children
                 browseNode(indent + "  ", client, node.getNodeId());
             }

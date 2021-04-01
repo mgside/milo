@@ -44,6 +44,9 @@ public class BrowseAsyncExample implements ClientExample {
 
         Tree<UaNode> tree = new Tree<>(rootNode);
 
+        
+        
+        
         long startTime = System.nanoTime();
         browseRecursive(client, tree).get();
         long endTime = System.nanoTime();

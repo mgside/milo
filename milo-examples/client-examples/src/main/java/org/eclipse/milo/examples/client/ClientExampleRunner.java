@@ -83,7 +83,7 @@ public class ClientExampleRunner {
                     .setCertificate(loader.getClientCertificate())
                     .setKeyPair(loader.getClientKeyPair())
                     .setIdentityProvider(clientExample.getIdentityProvider())
-                    .setRequestTimeout(uint(5000))
+                    .setRequestTimeout(uint(10000))
                     .build()
         );
     }
