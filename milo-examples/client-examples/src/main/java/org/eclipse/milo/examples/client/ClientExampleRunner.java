@@ -80,9 +80,7 @@ public class ClientExampleRunner {
                 configBuilder
                     .setApplicationName(LocalizedText.english("eclipse milo opc-ua client"))
                     .setApplicationUri("urn:eclipse:milo:examples:client")
-                    .setCertificate(loader.getClientCertificate())
-                    .setKeyPair(loader.getClientKeyPair())
-                    .setIdentityProvider(clientExample.getIdentityProvider())
+                 
                     .setRequestTimeout(uint(10000))
                     .build()
         );

@@ -10,6 +10,8 @@
 
 package org.eclipse.milo.examples.client;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -21,6 +23,13 @@ import com.google.common.collect.Lists;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaNode;
 import org.eclipse.milo.opcua.stack.core.Identifiers;
+import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
+import org.eclipse.milo.opcua.stack.core.types.builtin.ExpandedNodeId;
+import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
+import org.eclipse.milo.opcua.stack.core.types.builtin.QualifiedName;
+import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UShort;
+import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
+import org.eclipse.milo.opcua.stack.core.types.structured.ReadValueId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,13 +50,85 @@ public class BrowseAsyncExample implements ClientExample {
 
         // start browsing at root folder
         UaNode rootNode = client.getAddressSpace().getNode(Identifiers.RootFolder);
-
+        
         Tree<UaNode> tree = new Tree<>(rootNode);
-
+        List<NodeId> nodeIds = new ArrayList<NodeId>();
+        /*
+        NodeId nodeID = new NodeId(2,"0:Bucket Brigade.Gemicio");
+        NodeId nodeID2 = new NodeId(2,"0:SessionDiagnostics/0:QueryNextCount");
+        nodeIds.add(nodeID);
+        nodeIds.add(nodeID2);
+        client.readValues(0.0, TimestampsToReturn.Both, nodeIds);
         
         
+        NodeId nodeID1 = new NodeId(2,"0:Random.Int1");
+        client.readValue(
+                0.0,
+                TimestampsToReturn.Neither,
+                nodeID
+            );
+        
+        DataValue dataValue = client.readValue(
+                0.0,
+                TimestampsToReturn.Server,
+                nodeID
+            ).get();
+               
+        logger.info("dataValue  : " + dataValue.getValue().getValue());      
+        
+        DataValue dataValue1 = client.readValue(
+                0.0,
+                TimestampsToReturn.Neither,
+                NodeId.parse("ns=2;s=HelloWorld/Dynamic/Int32")
+            ).get();
+        
+        DataValue dataValue2 = client.readValue(
+                0.0,
+                TimestampsToReturn.Neither,
+                nodeID2
+            ).get();
+        
+        
+        QualifiedName qfName = new QualifiedName(2, "Gemicio");
+        
+        ReadValueId rvID = new ReadValueId(nodeID2, null, null, qfName);
+        
+       */
+        
+        NodeId nodeID = new NodeId(2,"0:@ClientCount");
+        
+        
+        DataValue dataValue1 = client.readValue(
+                0.0,
+                TimestampsToReturn.Neither,
+                NodeId.parse("ns=2;s=0:Read Error.Int1")
+            ).get();
+        
+        DataValue dataValue2 = client.readValue(
+                0.0,
+                TimestampsToReturn.Neither,
+                nodeID
+            ).get();
+               
+        DataValue dataValue3 = client.readValue(
+                0.0,
+                TimestampsToReturn.Neither,
+                NodeId.parse("ns=2;s=0:Saw-toothed Waves.Int1")
+            ).get();
+        
+        DataValue dataValue4 = client.readValue(
+                0.0,
+                TimestampsToReturn.Both,
+                NodeId.parse("ns=2;s=0:Bucket Brigade.Gemicio.Gemici")
+            ).get();
+        
+        /*logger.info("dataValue1 : " + dataValue1);
+        logger.info("dataValue2 : " + dataValue2);
+        logger.info("dataValue3 : " + dataValue3);*/
+        logger.info("dataValue4 : " + dataValue4);
         
         long startTime = System.nanoTime();
+        
         browseRecursive(client, tree).get();
         long endTime = System.nanoTime();
 
@@ -60,8 +141,11 @@ public class BrowseAsyncExample implements ClientExample {
         future.complete(client);
     }
 
-    private CompletableFuture<Void> browseRecursive(OpcUaClient client, Tree<UaNode> tree) {
-        return client.getAddressSpace().browseNodesAsync(tree.node).thenCompose(nodes -> {
+    
+
+	private CompletableFuture<Void> browseRecursive(OpcUaClient client, Tree<UaNode> tree) {
+        
+    	return client.getAddressSpace().browseNodesAsync(tree.node).thenCompose(nodes -> {
             // Add each child node to the tree
             nodes.forEach(tree::addChild);
 
