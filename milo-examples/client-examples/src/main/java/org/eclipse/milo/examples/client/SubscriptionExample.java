@@ -19,6 +19,7 @@ import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaSubscription;
 import org.eclipse.milo.opcua.stack.core.AttributeId;
 import org.eclipse.milo.opcua.stack.core.Identifiers;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
+import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.QualifiedName;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.MonitoringMode;
@@ -50,11 +51,18 @@ public class SubscriptionExample implements ClientExample {
         // create a subscription @ 1000ms
         UaSubscription subscription = client.getSubscriptionManager().createSubscription(1000.0).get();
 
+        NodeId node = new NodeId(2, "0:Square waves.Gemicio.Gemici.NASILYA");
+        
         // subscribe to the Value attribute of the server's CurrentTime node
+        //   ReadValueId readValueId = new ReadValueId(
+        //         Identifiers.Server_ServerStatus_CurrentTime,
+        //        AttributeId.Value.uid(), null, QualifiedName.NULL_VALUE
+        //     );
+        
         ReadValueId readValueId = new ReadValueId(
-            Identifiers.Server_ServerStatus_CurrentTime,
-            AttributeId.Value.uid(), null, QualifiedName.NULL_VALUE
-        );
+        		node,
+                AttributeId.Value.uid(), null, QualifiedName.NULL_VALUE
+            );
 
         // IMPORTANT: client handle must be unique per item within the context of a subscription.
         // You are not required to use the UaSubscription's client handle sequence; it is provided as a convenience.

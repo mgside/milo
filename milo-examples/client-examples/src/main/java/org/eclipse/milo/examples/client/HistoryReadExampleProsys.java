@@ -51,9 +51,9 @@ public class HistoryReadExampleProsys implements ClientExample {
             uint(0),
             true
         );
-
+        
         HistoryReadValueId historyReadValueId = new HistoryReadValueId(
-            new NodeId(3, "Counter"),
+            new NodeId(2, "0:Bucket Brigade.Gemicio.Gemici.NASILYA"),
             null,
             QualifiedName.NULL_VALUE,
             ByteString.NULL_VALUE
@@ -64,11 +64,11 @@ public class HistoryReadExampleProsys implements ClientExample {
 
         HistoryReadResponse historyReadResponse = client.historyRead(
             historyReadDetails,
-            TimestampsToReturn.Both,
+            TimestampsToReturn.Invalid,
             false,
             nodesToRead
         ).get();
-
+        
 
         HistoryReadResult[] historyReadResults = historyReadResponse.getResults();
 
@@ -94,7 +94,7 @@ public class HistoryReadExampleProsys implements ClientExample {
 
     @Override
     public String getEndpointUrl() {
-        return "opc.tcp://localhost:53530/OPCUA/SimulationServer";
+        return "opc.tcp://WIN-I0R1BA5ALO3:21381/MatrikonOpcUaWrapper";
     }
 
 }

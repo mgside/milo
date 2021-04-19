@@ -16,6 +16,7 @@ import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.subscriptions.ManagedDataItem;
 import org.eclipse.milo.opcua.sdk.client.subscriptions.ManagedSubscription;
 import org.eclipse.milo.opcua.stack.core.Identifiers;
+import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,15 +46,19 @@ public class ManagedSubscriptionDataExample implements ClientExample {
             }
         });
 
+     //   ManagedDataItem dataItem = subscription.createDataItem(
+     //   		 new NodeId(2, "0:Square Waves.Gemicio.Gemici")
+     //   );
         ManagedDataItem dataItem = subscription.createDataItem(
-            Identifiers.Server_ServerStatus_CurrentTime
-        );
-
+       		 new NodeId(2, "0:Random.String")
+       );
+        
+        
         if (dataItem.getStatusCode().isGood()) {
             logger.info("item created for nodeId={}", dataItem.getNodeId());
 
             // let the example run for 5 seconds before completing
-            Thread.sleep(5000);
+            Thread.sleep(10000000000L);
 
             dataItem.delete();
         } else {

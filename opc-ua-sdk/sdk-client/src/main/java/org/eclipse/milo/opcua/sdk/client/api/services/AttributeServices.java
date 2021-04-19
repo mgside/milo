@@ -126,7 +126,6 @@ public interface AttributeServices {
         List<ReadValueId> readValueIds = nodeIds.stream()
             .map(nodeId -> new ReadValueId(nodeId, AttributeId.Value.uid(), null, QualifiedName.NULL_VALUE))
             .collect(Collectors.toList());
-			//System.out.println("xyz" + readValueIds.toString()); //gem
         return read(maxAge, timestampsToReturn, readValueIds)
             .thenApply(r -> l(r.getResults()));
     }

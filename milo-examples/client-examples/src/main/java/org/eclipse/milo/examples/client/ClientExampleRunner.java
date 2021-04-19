@@ -23,6 +23,7 @@ import org.eclipse.milo.examples.server.ExampleServer;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.stack.core.Stack;
 import org.eclipse.milo.opcua.stack.core.types.builtin.LocalizedText;
+import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,6 +71,8 @@ public class ClientExampleRunner {
 
         KeyStoreLoader loader = new KeyStoreLoader().load(securityTempDir);
 
+        
+        
         return OpcUaClient.create(
             clientExample.getEndpointUrl(),
             endpoints ->
