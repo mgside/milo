@@ -51,14 +51,14 @@ public class ManagedSubscriptionDataExample implements ClientExample {
      //   );
         ManagedDataItem dataItem = subscription.createDataItem(
        		 new NodeId(2, "0:Random.String")
-       );
+        );
         
         
         if (dataItem.getStatusCode().isGood()) {
             logger.info("item created for nodeId={}", dataItem.getNodeId());
 
             // let the example run for 5 seconds before completing
-            Thread.sleep(10000000000L);
+            Thread.sleep(10000L);
 
             dataItem.delete();
         } else {

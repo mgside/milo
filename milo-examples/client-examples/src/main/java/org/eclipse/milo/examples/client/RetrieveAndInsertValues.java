@@ -4,8 +4,12 @@ import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.
 import static org.eclipse.milo.opcua.stack.core.util.ConversionUtil.l;
 import static org.eclipse.milo.opcua.stack.core.util.ConversionUtil.toList;
 import static com.google.common.collect.Lists.newArrayList;
+
+import java.awt.event.ItemEvent;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,6 +18,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfigBuilder;
@@ -32,6 +37,7 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.LocalizedText;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.QualifiedName;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
+import org.eclipse.milo.opcua.stack.core.types.builtin.Variant;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.BrowseDirection;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.BrowseResultMask;
@@ -53,6 +59,11 @@ import org.eclipse.milo.opcua.stack.core.types.structured.ReferenceDescription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+
+
+
+
 public class RetrieveAndInsertValues implements ClientExample {
 
 	private final Logger logger = LoggerFactory.getLogger(RetrieveAndInsertValues.class);
@@ -68,7 +79,7 @@ public class RetrieveAndInsertValues implements ClientExample {
 
 	public void run(OpcUaClient client, CompletableFuture<OpcUaClient> future) throws Exception {
 
-		client.connect().get();
+		//client.connect().get();
 		// opc.tcp://WIN-I0R1BA5ALO3:21381/MatrikonOpcUaWrapper
 		// opc.tcp://D1WIOFOPCD01:21381/MatrikonOpcUaWrapper
 		/*
@@ -84,15 +95,65 @@ public class RetrieveAndInsertValues implements ClientExample {
 		 * abc.connect().get();
 		 */
 
-		// readValue();
+	
+		
+		 //readValue();
 		//subscribe();
 		// historical();
-		managedSubscription();
-
+		//managedSubscription();
+		readValues();
 		future.complete(client);
 	}
 
+	
+
+	private void readValues() throws Exception {
+
+
+		OpcUaClient abc = OpcUaClient.create("opc.tcp://WIN-I0R1BA5ALO3:21381/MatrikonOpcUaWrapper",
+				endpoints -> endpoints.stream().filter(e -> true).findFirst(),
+				configBuilder -> configBuilder.setApplicationName(LocalizedText.english("eclipse milo opc-ua client"))
+						.setApplicationUri("urn:eclipse:milo:examples:client")
+
+						.setRequestTimeout(UInteger.valueOf(10000)).build());
+
+		abc.connect().get();
+		List<NodeId> nodeIds = new ArrayList<NodeId>();
+		
+		
+		
+		
+		//Variant value = new Variant(valueIfAbsent);
+		
+		
+		NodeId nodeId = new NodeId(2, "0:Square Waves.Gemicio");
+		
+		
+	
+		
+		
+		NodeId node = new NodeId(2, "0:Bucket Brigade.Gemicio.Gemici.NASILYA");
+		nodeIds.add(new NodeId(2, "0:Random.String"));
+        nodeIds.add(new NodeId(2, "0:Bucket Brigade.Gemicio.Gemici.NASILYA"));
+        nodeIds.add(new NodeId(2, "0:Bucket Brigade.Gemicio.Gemici"));
+        nodeIds.add(new NodeId(2, "0:Square Waves.Gemicio"));
+        nodeIds.add(node);
+		
+		List<DataValue> dataValues = abc.readValues(0.0, TimestampsToReturn.Both, nodeIds).get();
+		for (DataValue dataValue : dataValues) {
+			System.out.println(dataValue.toString());
+		}
+		
+		
+		
+		
+		System.out.println(dataValues.get(0).toString());
+		abc.disconnect();
+	}
+
 	private void managedSubscription() throws Exception {
+		
+		HashMap<String, String> dataTable = new HashMap<String, String>();
 		
 		OpcUaClient abc = OpcUaClient.create("opc.tcp://WIN-I0R1BA5ALO3:21381/MatrikonOpcUaWrapper",
 				endpoints -> endpoints.stream().filter(e -> true).findFirst(),
@@ -107,18 +168,19 @@ public class RetrieveAndInsertValues implements ClientExample {
 
         subscription.addDataChangeListener((items, values) -> {
             for (int i = 0; i < items.size(); i++) {
-                logger.info(
-                    "subscription value received: item={}, value={}",
-                    items.get(i).getNodeId(), values.get(i).getValue()
-                );
+                
+            //	logger.info( "subscription value received: item={}, value={}",  items.get(i).getNodeId(), values.get(i).getValue());
+                dataTable.put(items.get(i).getNodeId().toString(), values.get(i).getValue().toString());
+                
             }
         });
         List<NodeId> nodeIds = new ArrayList<NodeId>();
-        
+       
         nodeIds.add(new NodeId(2, "0:Random.String"));
         nodeIds.add(new NodeId(2, "0:Bucket Brigade.Gemicio.Gemici.NASILYA"));
         nodeIds.add(new NodeId(2, "0:Bucket Brigade.Gemicio.Gemici"));
         nodeIds.add(new NodeId(2, "0:Square Waves.Gemicio"));
+        
         nodeIds.add(new NodeId(2, "0:WHS_DK094PI102"));
         nodeIds.add(new NodeId(2, "0:WHS_DK100PI001"));
         nodeIds.add(new NodeId(2, "0:WHS_DK129PI102"));
@@ -272,27 +334,23 @@ public class RetrieveAndInsertValues implements ClientExample {
         nodeIds.add(new NodeId(2, "0:WHS_DK765TI102"));
         nodeIds.add(new NodeId(2, "0:WHS_DK768TI001"));
         
-        List<ManagedDataItem> dataItem = subscription.createDataItems(nodeIds);
+        
+        List<ManagedDataItem> dataItems = subscription.createDataItems(nodeIds);
+        dataTable.toString();
+        
+        logger.info("Ended" + dataTable.toString());
         
         
-        
-        for (ManagedDataItem managedDataItem : dataItem) {
-        	
-        	if (managedDataItem.getStatusCode().isGood()) {
-                logger.info("item created for nodeId={}", managedDataItem.getNodeId());
+        Thread.sleep(10000L);
+        insertDatasToDB(dataTable);
+	
+	}
 
-                // let the example run for 5 seconds before completing
-                Thread.sleep(10000000000L);
-
-                managedDataItem.delete();
-            } else {
-                logger.warn(
-                    "failed to create item for nodeId={} (status={})",
-                    managedDataItem.getNodeId(), managedDataItem.getStatusCode()
-                );
-            }
+	private void insertDatasToDB(HashMap<String, String> dataTable) {
+		
+		for ( HashMap.Entry<String, String> entry : dataTable.entrySet()) {
+		    System.out.println(entry.getKey() + " value is " + entry.getValue());
 		}
-        
 		
 	}
 
@@ -318,7 +376,7 @@ public class RetrieveAndInsertValues implements ClientExample {
 
 		browseNode("", abc, Identifiers.RootFolder);
 		logger.info("XXXXXXXXXXXXXXXX data val" + dataValue55.toString());
-		;
+		
 
 	}
 
@@ -389,9 +447,11 @@ public class RetrieveAndInsertValues implements ClientExample {
 		ArrayList<ReadValueId> readValueIds = new ArrayList<ReadValueId>();
 		ArrayList<MonitoredItemCreateRequest> monitoredItemCreateRequests = new ArrayList<MonitoredItemCreateRequest>();
 
+	
 		itemNames.add("Bucket Brigade.Gemicio.Gemici.NASILYA");
 		itemNames.add("Bucket Brigade.Gemicio.Gemici");
-
+		itemNames.add("Random.String");
+		itemNames.add("Square Waves.Gemicio");
 		for (int i = 0; i < itemNames.size(); i++) {
 			NodeId node = new NodeId(2, "0:" + itemNames.get(i));
 			ReadValueId readValueId = new ReadValueId(node, AttributeId.Value.uid(), null, QualifiedName.NULL_VALUE);
@@ -410,22 +470,23 @@ public class RetrieveAndInsertValues implements ClientExample {
 			MonitoredItemCreateRequest request = new MonitoredItemCreateRequest(readValueIds.get(i),
 					MonitoringMode.Reporting, parameters);
 			
-			UaSubscription.ItemCreationCallback onItemCreated = (item, id) -> item
-					.setValueConsumer(this::onSubscriptionValue);
+			monitoredItemCreateRequests.add(request);
+		}
+		
+		UaSubscription.ItemCreationCallback onItemCreated = (item, id) -> item
+				.setValueConsumer(this::onSubscriptionValue);
 
-			List<UaMonitoredItem> items = subscription
-					.createMonitoredItems(TimestampsToReturn.Both, newArrayList(request), onItemCreated).get();
-			
-			for (UaMonitoredItem item : items) {
-				if (item.getStatusCode().isGood()) {
-					logger.info("item created for nodeId={}", item.getReadValueId().getNodeId());
-				} else {
-					logger.warn("failed to create item for nodeId={} (status={})", item.getReadValueId().getNodeId(),
-							item.getStatusCode());
-				}
+		List<UaMonitoredItem> items = subscription
+				.createMonitoredItems(TimestampsToReturn.Both, monitoredItemCreateRequests, onItemCreated).get();
+		
+		for (UaMonitoredItem item : items) {
+			if (item.getStatusCode().isGood()) {
+				logger.info("item created for nodeId={}", item.getReadValueId().getNodeId());
+			} else {
+				logger.warn("failed to create item for nodeId={} (status={})", item.getReadValueId().getNodeId(),
+						item.getStatusCode());
 			}
 		}
-
 		
 		
 		
