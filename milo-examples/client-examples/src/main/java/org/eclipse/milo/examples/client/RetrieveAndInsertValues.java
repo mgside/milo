@@ -80,8 +80,8 @@ public class RetrieveAndInsertValues implements ClientExample {
 	public void run(OpcUaClient client, CompletableFuture<OpcUaClient> future) throws Exception {
 
 		//client.connect().get();
-		// opc.tcp://WIN-I0R1BA5ALO3:21381/MatrikonOpcUaWrapper
-		// opc.tcp://D1WIOFOPCD01:21381/MatrikonOpcUaWrapper
+		// opc.tcp://:21381/MatrikonOpcUaWrapper
+		// opc.tcp://:21381/MatrikonOpcUaWrapper
 		/*
 		 * OpcUaClient abc =
 		 * OpcUaClient.create("opc.tcp://WIN-I0R1BA5ALO3:21381/MatrikonOpcUaWrapper",
@@ -110,7 +110,7 @@ public class RetrieveAndInsertValues implements ClientExample {
 	private void readValues() throws Exception {
 
 
-		OpcUaClient abc = OpcUaClient.create("opc.tcp://WIN-I0R1BA5ALO3:21381/MatrikonOpcUaWrapper",
+		OpcUaClient abc = OpcUaClient.create("opc.tcp://:21381/MatrikonOpcUaWrapper",
 				endpoints -> endpoints.stream().filter(e -> true).findFirst(),
 				configBuilder -> configBuilder.setApplicationName(LocalizedText.english("eclipse milo opc-ua client"))
 						.setApplicationUri("urn:eclipse:milo:examples:client")
@@ -155,7 +155,7 @@ public class RetrieveAndInsertValues implements ClientExample {
 		
 		HashMap<String, String> dataTable = new HashMap<String, String>();
 		
-		OpcUaClient abc = OpcUaClient.create("opc.tcp://WIN-I0R1BA5ALO3:21381/MatrikonOpcUaWrapper",
+		OpcUaClient abc = OpcUaClient.create("opc.tcp://:21381/MatrikonOpcUaWrapper",
 				endpoints -> endpoints.stream().filter(e -> true).findFirst(),
 				configBuilder -> configBuilder.setApplicationName(LocalizedText.english("eclipse milo opc-ua client"))
 						.setApplicationUri("urn:eclipse:milo:examples:client")
@@ -356,7 +356,7 @@ public class RetrieveAndInsertValues implements ClientExample {
 
 	private void readValue() throws Exception {
 
-		OpcUaClient abc = OpcUaClient.create("opc.tcp://WIN-I0R1BA5ALO3:21381/MatrikonOpcUaWrapper",
+		OpcUaClient abc = OpcUaClient.create("opc.tcp://:21381/MatrikonOpcUaWrapper",
 				endpoints -> endpoints.stream().filter(e -> true).findFirst(),
 				configBuilder -> configBuilder.setApplicationName(LocalizedText.english("eclipse milo opc-ua client"))
 						.setApplicationUri("urn:eclipse:milo:examples:client")
@@ -383,7 +383,7 @@ public class RetrieveAndInsertValues implements ClientExample {
 	private void historical() throws Exception {
 
 		System.out.println("history started");
-		OpcUaClient abc = OpcUaClient.create("opc.tcp://WIN-I0R1BA5ALO3:21381/MatrikonOpcUaWrapper",
+		OpcUaClient abc = OpcUaClient.create("opc.tcp://:21381/MatrikonOpcUaWrapper",
 				endpoints -> endpoints.stream().filter(e -> true).findFirst(),
 				configBuilder -> configBuilder.setApplicationName(LocalizedText.english("eclipse milo opc-ua client"))
 						.setApplicationUri("urn:eclipse:milo:examples:client")
@@ -432,7 +432,7 @@ public class RetrieveAndInsertValues implements ClientExample {
 
 	private void subscribe() throws Exception {
 
-		OpcUaClient abc = OpcUaClient.create("opc.tcp://WIN-I0R1BA5ALO3:21381/MatrikonOpcUaWrapper",
+		OpcUaClient abc = OpcUaClient.create("opc.tcp://:21381/MatrikonOpcUaWrapper",
 				endpoints -> endpoints.stream().filter(e -> true).findFirst(),
 				configBuilder -> configBuilder.setApplicationName(LocalizedText.english("eclipse milo opc-ua client"))
 						.setApplicationUri("urn:eclipse:milo:examples:client")
